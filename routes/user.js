@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -6,9 +6,7 @@ const express = require("express");
 const router = express.Router();
 const keys = require("../config/keys");
 const passport = require("passport");
-var nodemailer = require('nodemailer');
-
-
+var nodemailer = require("nodemailer");
 
 //Load validation function
 const validateRegisterInput = require("../validation/register");
@@ -34,17 +32,16 @@ const Property = require("../models/Property");
 // });
 
 var transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: "smtp.gmail.com",
   port: 465,
-  secure: true,  
-  service: 'Gmail',
+  secure: true,
+  service: "Gmail",
   auth: {
     user: process.env.EMAIL,
-    pass: process.env.PASSWORD
-  }
+    pass: process.env.PASSWORD,
+  },
 });
 // @Route api/user/otpregister
-
 
 // @Route api/user/register
 router.post("/register", async (req, res) => {
@@ -52,7 +49,7 @@ router.post("/register", async (req, res) => {
   // const countryCodeValue = `+${countryCode}`
   if (password !== password_confirmation) {
     return res.status(400).json({
-      msg: "Password do not match."
+      msg: "Password do not match.",
     });
   }
   //validate registration detail
@@ -71,7 +68,7 @@ router.post("/register", async (req, res) => {
       email,
       // phone,
       // countryCodeValue,
-      password
+      password,
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -81,31 +78,34 @@ router.post("/register", async (req, res) => {
     var mailOptions = {
       from: process.env.EMAIL,
       to: req.body.email,
-      subject: 'Welcome',
-      html: "<h1>Welcome To Get Right Property ! </h1><p>\
-      <h3>Hello "+req.body.name+"</h3>\
+      subject: "Welcome",
+      html:
+        "<h1>Welcome To Get Right Property ! </h1><p>\
+      <h3>Hello " +
+        req.body.name +
+        "</h3>\
       Thank You for Registering with Us. <br/>\
       Now You can visit for property and post your Property! \
-      </p>"
-  };
+      </p>",
+    };
 
-  transporter.sendMail(mailOptions, function (error, info) {
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-          console.log(error);
+        console.log(error);
       } else {
-          // console.log('Email sent: ' + info.response);
-          // User.updateOne({email: userData.email}, {
-          //     token: currentDateTime, 
-              
-          // },  {multi:true},function(err, affected, resp) {
-              return res.status(200).json({
-                  success: false,
-                  msg: info.response,
-                  userlist: resp
-              });
-          // })
+        // console.log('Email sent: ' + info.response);
+        // User.updateOne({email: userData.email}, {
+        //     token: currentDateTime,
+
+        // },  {multi:true},function(err, affected, resp) {
+        return res.status(200).json({
+          success: false,
+          msg: info.response,
+          userlist: resp,
+        });
+        // })
       }
-  });
+    });
     res.status(200).send({ msg: "registration completed please login!" });
   }
 });
@@ -133,7 +133,7 @@ router.post("/login", async (req, res) => {
       const payload = {
         id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
       };
 
       const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 });
@@ -148,111 +148,133 @@ router.post("/login", async (req, res) => {
 });
 
 //reset password
-router.post('/reset', function (req, res) {
+router.post("/reset", function (req, res) {
   User.findOne({ email: req.body.email }, function (error, userData) {
+    //smtp.gmail.com  //in place of service use host...
+    // var transporter = nodemailer.createTransport({
+    //     service: 'gmail',
 
-     //smtp.gmail.com  //in place of service use host...
-      // var transporter = nodemailer.createTransport({
-      //     service: 'gmail',
-         
+    //     auth: {
+    //         user: process.env.EMAIL,
+    //         pass: process.env.PASSWORD
+    //     },
+    //     secure: false,
+    //     tls: {
+    //         rejectUnauthorized: false
+    //     }
+    // host: "smtp.mailtrap.io",
+    // port: 2525,
+    // auth: {
+    //   user: "be79cf1a9afa3d",
+    //   pass: "8b674328f9118f"
+    // }
 
-      //     auth: {
-      //         user: process.env.EMAIL,
-      //         pass: process.env.PASSWORD
-      //     },
-      //     secure: false,
-      //     tls: {
-      //         rejectUnauthorized: false
-      //     }
-          // host: "smtp.mailtrap.io",
-          // port: 2525,
-          // auth: {
-          //   user: "be79cf1a9afa3d",
-          //   pass: "8b674328f9118f"
-          // }
-
-      // });
-      var currentDateTime = new Date();
-      var mailOptions = {
-          from: process.env.EMAIL,
-          to: req.body.email,
-          subject: 'Password Reset',
-          // text: 'That was easy!',
-          html: "<h1>Welcome To Get Right Property ! </h1><p>\
-          <h3>Hello "+userData.name+"</h3>\
+    // });
+    var currentDateTime = new Date();
+    var mailOptions = {
+      from: process.env.EMAIL,
+      to: req.body.email,
+      subject: "Password Reset",
+      // text: 'That was easy!',
+      html:
+        "<h1>Welcome To Get Right Property ! </h1><p>\
+          <h3>Hello " +
+        userData.name +
+        "</h3>\
           If You are requested to reset your password then click on below link<br/>\
-          <a href='http://localhost:3000/change-password/"+currentDateTime+"+++"+userData.email+"'>Click On This Link</a>\
-          </p>"
-      };
+          <a href='http://ec2-13-233-172-122.ap-south-1.compute.amazonaws.com/change-password/" +
+        currentDateTime +
+        "+++" +
+        userData.email +
+        "'>Click On This Link</a>\
+          </p>",
+    };
 
-      transporter.sendMail(mailOptions, function (error, info) {
-          if (error) {
-              console.log(error);
-          } else {
-              console.log('Email sent: ' + info.response);
-              User.updateOne({email: userData.email}, {
-                  token: currentDateTime, 
-                  
-              },  {multi:true},function(err, affected, resp) {
-                  return res.status(200).json({
-                      success: false,
-                      msg: info.response,
-                      userlist: resp
-                  });
-              })
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+        User.updateOne(
+          { email: userData.email },
+          {
+            token: currentDateTime,
+          },
+          { multi: true },
+          function (err, affected, resp) {
+            return res.status(200).json({
+              success: false,
+              msg: info.response,
+              userlist: resp,
+            });
           }
-      });
-  })
+        );
+      }
+    });
+  });
 });
 
 //updatepassword
-router.post('/updatePassword',function(req, res){
+router.post("/updatePassword", function (req, res) {
   User.findOne({ email: req.body.email }, function (errorFind, userData) {
-      if(userData.token==req.body.linkDate && req.body.password==req.body.confirm_password)
-      {
-          bcrypt.genSalt(10, (errB, salt) => {
-              bcrypt.hash(req.body.password, salt, (err, hash) => {
-                  if (err) throw err;
-                  let newPassword = hash;
-                  let condition = { _id: userData._id };
-                  let dataForUpdate = { password: newPassword,updatedDate: new Date() };
-                  User.findOneAndUpdate(condition, dataForUpdate, { new: true }, function (error, updatedUser) {
-                      if (error) {
-                          if (err.name === 'MongoError' && error.code === 11000) {
-                            return res.status(500).json({msg:'Mongo Db Error', error:error.message});
-                          }else{
-                              return res.status(500).json({msg:'Unknown Server Error', error:'Unknow server error when updating User'});
-                          }
-                      }
-                      else{
-                              if (!updatedUser) {
-                                  return res.status(404).json({
-                                      msg: "User Not Found.",
-                                      success: false
-                                  });
-                              }else{
-                              return res.status(200).json({
-                                  success: true,
-                                  msg: "Your password are Successfully Updated",
-                                  updatedData: updatedUser
-                              });
-                          }
-                      }
+    if (
+      userData.token == req.body.linkDate &&
+      req.body.password == req.body.confirm_password
+    ) {
+      bcrypt.genSalt(10, (errB, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+          if (err) throw err;
+          let newPassword = hash;
+          let condition = { _id: userData._id };
+          let dataForUpdate = {
+            password: newPassword,
+            updatedDate: new Date(),
+          };
+          User.findOneAndUpdate(
+            condition,
+            dataForUpdate,
+            { new: true },
+            function (error, updatedUser) {
+              if (error) {
+                if (err.name === "MongoError" && error.code === 11000) {
+                  return res
+                    .status(500)
+                    .json({ msg: "Mongo Db Error", error: error.message });
+                } else {
+                  return res
+                    .status(500)
+                    .json({
+                      msg: "Unknown Server Error",
+                      error: "Unknow server error when updating User",
+                    });
+                }
+              } else {
+                if (!updatedUser) {
+                  return res.status(404).json({
+                    msg: "User Not Found.",
+                    success: false,
                   });
-              });
-          });
-      }
-      if (errorFind)
-      {
-              return res.status(401).json({
-              msg: "Something Went Wrong",
-              success: false
-          });
-      }
-  }
-  );
- 
-})
+                } else {
+                  return res.status(200).json({
+                    success: true,
+                    msg: "Your password are Successfully Updated",
+                    updatedData: updatedUser,
+                  });
+                }
+              }
+            }
+          );
+        });
+      });
+    }
+    if (errorFind) {
+      return res.status(401).json({
+        msg: "Something Went Wrong",
+        success: false,
+      });
+    }
+  });
+});
 
 //get all user properties
 //@Route /api/user/property/all
@@ -265,7 +287,7 @@ router.get(
     const pageSize = req.query.pageSize;
 
     const propertyList = await Property.find({
-      user: mongoose.Types.ObjectId(req.user.id)
+      user: mongoose.Types.ObjectId(req.user.id),
     })
       .skip((currentPage - 1) * pageSize)
       .limit(pageSize * 1)
@@ -289,7 +311,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const totalCount = await Property.find({
-      user: mongoose.Types.ObjectId(req.user.id)
+      user: mongoose.Types.ObjectId(req.user.id),
     }).countDocuments();
 
     if (totalCount === 0) {
@@ -305,7 +327,7 @@ router.get(
 router.get("/property/:id", async (req, res) => {
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     const propertyList = await Property.find({
-      user: mongoose.Types.ObjectId(req.params.id)
+      user: mongoose.Types.ObjectId(req.params.id),
     });
     if (propertyList) {
       res.status(200).send(propertyList);
