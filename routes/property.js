@@ -48,24 +48,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-//
-// const db = new Datastore();
-// const multipartMiddleware = multipart();
-// // Pusher configuration
-// const pusher = new Pusher({
-//   appId: process.env.PUSHER_APP_ID,
-//   key: process.env.PUSHER_APP_KEY,
-//   secret: process.env.PUSHER_APP_SECRET,
-//   cluster: process.env.PUSHER_APP_CLUSTER,
-//   encrypted: true,
-// });
-
-// // Cloudinary configuration
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-// });
 
 // Get images from database
 router.get("/getImages", (req, res) => {
@@ -76,28 +58,6 @@ router.get("/getImages", (req, res) => {
   });
 });
 
-// router.post('/upload', multipartMiddleware, (req, res) => {
-//   // Upload image
-//   cloudinary.v2.uploader.upload(req.files.image.path, {}, function(
-//     error,
-//     result
-//   ) {
-//     if (error) {
-//       return res.status(500).send(error);
-//     }
-//     // Save record
-//     db.insert(Object.assign({}, result, req.body), (err, newDoc) => {
-//       if (err) {
-//         return res.status(500).send(err);
-//       }
-//       // Emit realtime event
-//       pusher.trigger('gallery', 'upload', {
-//         image: newDoc,
-//       });
-//       res.status(200).json(newDoc);
-//     });
-//   });
-// });
 router.post("/upload", upload.single("image"), async (req, res, next) => {
   const qww = req.file.originalname;
   let fileName = req.file.originalname + ".jpg";
@@ -140,6 +100,23 @@ router.post(
 
     const PropertyDetails = {
       user: req.user.id,
+      apartType: req.body.apartType,
+      apartName: req.body.apartName,
+      bhk: req.body.bhk,
+      floor: req.body.floor,
+      totalFloor: req.body.totalFloor,
+      propertyAge: req.body.propertyAge,
+      facing: req.body.facing,
+      nearBy1: req.body.nearBy1,
+      nearBy2: req.body.nearBy2,
+      nearBy3: req.body.nearBy3,
+      locality: req.body.locality,
+      landmark: req.body.landmark,
+      expectedPrice: req.body.expectedPrice,
+      expectedDeposit: req.body.expectedDeposit,
+      availableFrom: req.body.availableFrom,
+      furnishing: req.body.furnishing,
+      balcony: req.body.balcony,
       title: req.body.title,
       imgUrl: req.body.imgUrl,
       price: req.body.price,
@@ -160,6 +137,16 @@ router.post(
       area: req.body.area,
       garages: req.body.garages,
       features: {
+        waterSupply: req.body.waterSupply ? true : false,
+        security: req.body.security ? true : false,
+        lift: req.body.lift ? true : false,
+        clubHouse: req.body.clubHouse ? true : false,
+        swimmingPool: req.body.swimmingPool ? true : false,
+        playArea: req.body.playArea ? true : false,
+        fireSafety: req.body.fireSafety ? true : false,
+        park: req.body.park ? true : false,
+        powerBackUp: req.body.powerBackUp ? true : false,
+        houseKeeping: req.body.houseKeeping ? true : false,
         ac: req.body.ac ? true : false,
         gym: req.body.gym ? true : false,
         bar: req.body.bar ? true : false,
@@ -176,11 +163,6 @@ router.post(
       answer: req.body.answer,
       reviewTitle: req.body.reviewTitle,
       reviewDes: req.body.reviewDes,
-      //   obej:[{
-      //     answer: req.body.answer,
-      //     question: req.body.question
-      //   }
-      //  ],
     };
 
     const property = await Property.findOne({ title: PropertyDetails.title });
@@ -214,6 +196,23 @@ router.post(
 
     const PropertyDetails = {
       user: req.user.id,
+      apartType: req.body.apartType,
+      apartName: req.body.apartName,
+      bhk: req.body.bhk,
+      floor: req.body.floor,
+      totalFloor: req.body.totalFloor,
+      propertyAge: req.body.propertyAge,
+      facing: req.body.facing,
+      nearBy1: req.body.nearBy1,
+      nearBy2: req.body.nearBy2,
+      nearBy3: req.body.nearBy3,
+      locality: req.body.locality,
+      landmark: req.body.landmark,
+      expectedPrice: req.body.expectedPrice,
+      expectedDeposit: req.body.expectedDeposit,
+      availableFrom: req.body.availableFrom,
+      furnishing: req.body.furnishing,
+      balcony: req.body.balcony,
       title: req.body.title,
       imgUrl: req.body.imgUrl,
       price: req.body.price,
@@ -234,6 +233,16 @@ router.post(
       area: req.body.area,
       garages: req.body.garages,
       features: {
+        waterSupply: req.body.waterSupply ? true : false,
+        security: req.body.security ? true : false,
+        lift: req.body.lift ? true : false,
+        clubHouse: req.body.clubHouse ? true : false,
+        swimmingPool: req.body.swimmingPool ? true : false,
+        playArea: req.body.playArea ? true : false,
+        fireSafety: req.body.fireSafety ? true : false,
+        park: req.body.park ? true : false,
+        powerBackUp: req.body.powerBackUp ? true : false,
+        houseKeeping: req.body.houseKeeping ? true : false,
         ac: req.body.ac ? true : false,
         gym: req.body.gym ? true : false,
         bar: req.body.bar ? true : false,
@@ -285,6 +294,7 @@ router.post("/enquiry", async (req, res, next) => {
       message: message,
       numbers: ["9916785065", "9064057801"],
     });
+    console.log("response", response);
     res.send(response);
 
     var mailOptions = {
@@ -339,6 +349,23 @@ router.post(
     }
 
     const PropertyDetails = {
+      apartType: req.body.apartType,
+      apartName: req.body.apartName,
+      bhk: req.body.bhk,
+      floor: req.body.floor,
+      totalFloor: req.body.totalFloor,
+      propertyAge: req.body.propertyAge,
+      facing: req.body.facing,
+      nearBy1: req.body.nearBy1,
+      nearBy2: req.body.nearBy2,
+      nearBy3: req.body.nearBy3,
+      locality: req.body.locality,
+      landmark: req.body.landmark,
+      expectedPrice: req.body.expectedPrice,
+      expectedDeposit: req.body.expectedDeposit,
+      availableFrom: req.body.availableFrom,
+      furnishing: req.body.furnishing,
+      balcony: req.body.balcony,
       title: req.body.title,
       imgUrl: req.body.imgUrl,
       price: req.body.price,
@@ -355,6 +382,16 @@ router.post(
       area: req.body.area,
       garages: req.body.garages,
       features: {
+        waterSupply: req.body.waterSupply ? true : false,
+        security: req.body.security ? true : false,
+        lift: req.body.lift ? true : false,
+        clubHouse: req.body.clubHouse ? true : false,
+        swimmingPool: req.body.swimmingPool ? true : false,
+        playArea: req.body.playArea ? true : false,
+        fireSafety: req.body.fireSafety ? true : false,
+        park: req.body.park ? true : false,
+        powerBackUp: req.body.powerBackUp ? true : false,
+        houseKeeping: req.body.houseKeeping ? true : false,
         ac: req.body.ac ? true : false,
         gym: req.body.gym ? true : false,
         bar: req.body.bar ? true : false,
@@ -394,6 +431,23 @@ router.put("/:id", function (req, res) {
   const id = req.body.id;
 
   const PropertyDetails = {
+    apartType: req.body.apartType,
+    apartName: req.body.apartName,
+    bhk: req.body.bhk,
+    floor: req.body.floor,
+    totalFloor: req.body.totalFloor,
+    propertyAge: req.body.propertyAge,
+    facing: req.body.facing,
+    nearBy1: req.body.nearBy1,
+    nearBy2: req.body.nearBy2,
+    nearBy3: req.body.nearBy3,
+    locality: req.body.locality,
+    landmark: req.body.landmark,
+    expectedPrice: req.body.expectedPrice,
+    expectedDeposit: req.body.expectedDeposit,
+    availableFrom: req.body.availableFrom,
+    furnishing: req.body.furnishing,
+    balcony: req.body.balcony,
     title: req.body.title,
     imgUrl: req.body.imgUrl,
     price: req.body.price,
@@ -410,6 +464,16 @@ router.put("/:id", function (req, res) {
     area: req.body.area,
     garages: req.body.garages,
     features: {
+      waterSupply: req.body.waterSupply ? true : false,
+      security: req.body.security ? true : false,
+      lift: req.body.lift ? true : false,
+      clubHouse: req.body.clubHouse ? true : false,
+      swimmingPool: req.body.swimmingPool ? true : false,
+      playArea: req.body.playArea ? true : false,
+      fireSafety: req.body.fireSafety ? true : false,
+      park: req.body.park ? true : false,
+      powerBackUp: req.body.powerBackUp ? true : false,
+      houseKeeping: req.body.houseKeeping ? true : false,
       ac: req.body.ac ? true : false,
       gym: req.body.gym ? true : false,
       bar: req.body.bar ? true : false,
