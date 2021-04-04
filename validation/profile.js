@@ -34,8 +34,8 @@ module.exports = function validateUpdateProfile(data) {
     errors.address = "please insert your address";
   }
   if (!isEmpty(data.address)) {
-    if (!Validator.isLength(data.address, { min: 15, max: 100 })) {
-      errors.address = "Address must be atleast 15 characters";
+    if (!Validator.isLength(data.address, { min: 5, max: 100 })) {
+      errors.address = "Address must be atleast 5 characters";
     }
   }
 
@@ -81,6 +81,6 @@ module.exports = function validateUpdateProfile(data) {
 
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };

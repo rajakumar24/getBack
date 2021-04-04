@@ -4,53 +4,53 @@ const Schema = mongoose.Schema;
 const profileSchema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   about: {
-    type: String
+    type: String,
   },
   country: {
     type: String,
-    required: true
+    // required: true
   },
   address: {
     type: String,
-    required: true,
-    minlength: 15,
-    maxlength: 100
+    //required: true,
+    minlength: 5,
+    maxlength: 100,
   },
   mobile: {
     type: Number,
-    required: true,
+    //required: true,
     minlength: 10,
-    maxlength: 10
+    maxlength: 10,
   },
   skype: {
-    type: String
+    type: String,
   },
   website: {
-    type: String
+    type: String,
   },
   socialMedia: {
     facebook: {
-      type: String
+      type: String,
     },
     twitter: {
-      type: String
+      type: String,
     },
     linkedin: {
-      type: String
-    }
+      type: String,
+    },
   },
   imgUrl: {
     type: String,
     required: false,
-    default: "http://placehold.jp/300x250.png"
+    default: "http://placehold.jp/300x250.png",
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 const Profile = mongoose.model("Profile", profileSchema);
 module.exports = Profile;

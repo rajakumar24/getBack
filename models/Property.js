@@ -96,7 +96,7 @@ const propertySchema = new Schema({
   description: {
     type: String,
     required: false,
-    minlength: 15,
+    minlength: 5,
     maxlength: 300,
   },
   address: {
