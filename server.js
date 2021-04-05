@@ -113,5 +113,5 @@ app.use((error, req, res, next) => {
 
 // Server Setup
 app.listen(process.env.PORT || 3001, function () {
-  console.log("Server running on localhost:" + port);
+  console.log("Server running on localhost:");
 });
