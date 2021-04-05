@@ -1,15 +1,16 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const path = require('path');
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const path = require("path");
 const passport = require("passport");
+require("dotenv").config();
 //
-const multipart = require('connect-multiparty');
-const cloudinary = require('cloudinary');
-const Datastore = require('nedb');
-const Pusher = require('pusher');
+const multipart = require("connect-multiparty");
+const cloudinary = require("cloudinary");
+const Datastore = require("nedb");
+const Pusher = require("pusher");
 // 1
- const cors = require('cors');
+const cors = require("cors");
 // const morgan = require("morgan");
 
 const user = require("./routes/user");
@@ -17,23 +18,23 @@ const profile = require("./routes/profile");
 const property = require("./routes/property");
 
 const app = express();
-app.use('/uploads', express.static(path.join(__dirname, './public', 'images')));
+app.use("/uploads", express.static(path.join(__dirname, "./public", "images")));
 // const api = require('./src/router/api');
 // const basicdetails = require('./src/router/Basicdetail');
 // const contactagent= require('./src/router/contactagent');
 
-
 //DB Setup
 const db = require("./config/keys").mongoURI;
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true}
-  )
+  .connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
   .then(() => {
     console.log("Connected to MongoDB");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 
@@ -42,7 +43,7 @@ mongoose
 //     if(err){
 //         console.error('Error! ' + err)
 //     } else {
-//       console.log('Connected to mongodb')      
+//       console.log('Connected to mongodb')
 //     }
 // });
 
@@ -72,7 +73,7 @@ app.use("/api/profile/", profile);
 app.use("/api/property/", property);
 
 // Hanlding unhandled promises
-process.on("unhandledRejection", ex => {
+process.on("unhandledRejection", (ex) => {
   throw ex;
 });
 
@@ -105,14 +106,13 @@ app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
     error: {
-      message: error.message
-    }
+      message: error.message,
+    },
   });
 });
 
-
 // Server Setup
 const port = 3001;
-app.listen(port, function(){
-    console.log("Server running on localhost:" + port);
+app.listen(process.env.PORT || port, function () {
+  console.log("Server running on localhost:" + port);
 });
